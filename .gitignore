@@ -1,0 +1,6 @@
+
+.nx/installation/node_modules
+.nx/cache
+dist
+
+.idea

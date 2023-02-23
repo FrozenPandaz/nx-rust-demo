@@ -1,0 +1,19 @@
+{
+  "plugins": [
+    "@monodon/rust"
+  ],
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": []
+      }
+    }
+  },
+  "installation": {
+    "version": "15.8.0-beta.4",
+    "plugins": {
+      "@monodon/rust": "1.0.0"
+    }
+  }
+}
