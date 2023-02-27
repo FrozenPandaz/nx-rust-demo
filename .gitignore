@@ -1,5 +1,5 @@
 
-.nx/installation/node_modules
+.nx/installation
 .nx/cache
 dist
 

@@ -6,6 +6,6 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
-cats = { path = "../cats" }
+cats = { path = "./cats" }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

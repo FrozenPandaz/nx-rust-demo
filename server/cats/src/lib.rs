@@ -1,13 +1,14 @@
+use std::collections::HashSet;
+use std::sync::Mutex;
+
 use actix_web::web::*;
 use actix_web::{get, post, HttpResponse, Responder, Scope};
-use std::sync::{Arc, Mutex};
-use std::vec::Vec;
 
-struct Cats {
-    cats: Arc<Mutex<Vec<Cat>>>,
+pub struct Cats {
+    cats: Mutex<HashSet<Cat>>,
 }
 
-#[derive(Eq, Hash, PartialEq, Clone, Debug, serde::Deserialize)]
+#[derive(Eq, Hash, PartialEq, Clone, Debug, serde::Deserialize, serde::Serialize)]
 struct Cat {
     name: String,
     age: u8,
@@ -17,28 +18,32 @@ struct Cat {
 async fn get_cats(data: Data<Cats>) -> impl Responder {
     let cats = data.cats.lock().unwrap();
 
-    println!("Cats {:?}", cats.clone());
+    println!("Cats {:?}", &cats);
 
-    HttpResponse::Ok().body(format!("{:?}", cats.clone()))
+    Json(cats.clone())
 }
 
 #[post("/add")]
 async fn add_cat(cat: Json<Cat>, data: Data<Cats>) -> impl Responder {
     let mut cats = data.cats.lock().unwrap();
 
-    println!("Adding {:?}", cat.clone());
+    println!("Adding {:?}", &cat);
 
-    cats.push(cat.into_inner());
+    cats.insert(cat.into_inner());
 
     HttpResponse::Ok()
 }
 
-pub fn create_cat_scope() -> Scope {
-    let cat_state = Data::new(Cats {
-        cats: Arc::new(Mutex::new(Vec::new())),
-    });
+pub fn create_cat_data() -> Data<Cats> {
+    Data::new(Cats {
+        cats: Mutex::new(HashSet::new()),
+    })
+}
+
+pub fn create_cat_scope(data: &Data<Cats>) -> Scope {
     scope("/cats")
-        .app_data(cat_state.clone())
+        // Cloning is cheap here because internally, Data uses `Arc`
+        .app_data(Data::clone(data))
         .service(add_cat)
         .service(get_cats)
 }

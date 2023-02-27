@@ -11,9 +11,9 @@
     }
   },
   "installation": {
-    "version": "15.8.0-beta.4",
+    "version": "15.8.0",
     "plugins": {
-      "@monodon/rust": "1.0.0"
+      "@monodon/rust": "1.1.0"
     }
   }
 }
